@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "212565611033",
+    "project_id": "footlab-7827e",
+    "storage_bucket": "footlab-7827e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212565611033:android:07564d76f247b0746ad088",
+        "android_client_info": {
+          "package_name": "com.example.footlab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpxUrJy9Ondb8i_PMEHpCnShzhIH7S4_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
