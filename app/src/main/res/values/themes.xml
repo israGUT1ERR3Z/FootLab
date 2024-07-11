@@ -24,7 +24,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Color de la barra de estado -->
-        <item name="android:statusBarColor">#0F205F</item>
+        <item name="android:statusBarColor">#27276F</item>
         <!-- Otros ajustes específicos del tema -->
     </style>
 
