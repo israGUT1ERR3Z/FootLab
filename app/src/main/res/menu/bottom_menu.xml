@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <item
+        android:title=""
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/bottom_gallery"
+        android:icon="@drawable/baseline_gallery_24"
+        android:tint="@color/fab_icon_color"
+        android:title="Galería"/>
+
+    <item
+        android:title=""
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/bottom_help"
+        android:icon="@drawable/baseline_help_24"
+        android:tint="@color/fab_icon_color"
+        android:title="Ayuda" />
+
+    <item
+        android:title=""
+        android:enabled="true"/>
+
+
+
+</menu>
