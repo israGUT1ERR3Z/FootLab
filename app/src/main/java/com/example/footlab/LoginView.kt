@@ -1,5 +1,6 @@
 package com.example.footlab
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
@@ -20,6 +21,7 @@ class LoginView : AppCompatActivity() {
     //Función MAIN//
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        verificarCredencialesGuardadas()
         setContentView(R.layout.activity_login_view)
 
         //Inicialización de los elementos del layout//
@@ -34,6 +36,19 @@ class LoginView : AppCompatActivity() {
         //Evento para el botón para iniciar sesión//
         botonLogin.setOnClickListener{
             iniciarSesion()
+        }
+    }
+
+    fun verificarCredencialesGuardadas(){
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val savedUsername = sharedPreferences.getString("Username", null)
+        val savedPassword = sharedPreferences.getString("Password", null)
+        if (savedUsername != null && savedPassword != null) {
+            // Ir directamente a la pantalla principal
+            val intent = Intent(this, MainView::class.java)
+            startActivity(intent)
+            finish()
+            return
         }
     }
 
@@ -64,7 +79,15 @@ class LoginView : AppCompatActivity() {
                     val password = paciente.getString("Contraseña")
                     val nombre = paciente.getString("Nombres")
                     if(password==contra){
-                        Toast.makeText(this, "Bienvenido $nombre", Toast.LENGTH_LONG).show()
+                        if (nombre != null) {
+                            guardarDatos(nombre,usuario,contra)
+                            Toast.makeText(this, "Bienvenido $nombre", Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, MainView::class.java)
+                            startActivity(intent)
+                            finish()
+                            return@addOnSuccessListener
+                        }
+
                     }else{
                         Toast.makeText(this, "Contraseña incorrecta. Favor de rectificar", Toast.LENGTH_LONG).show()
                     }
@@ -74,5 +97,14 @@ class LoginView : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun guardarDatos(nombre:String,user:String,pass:String){
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("Nombre", nombre)
+        editor.putString("Username", user)
+        editor.putString("Password", pass)
+        editor.apply()
     }
 }

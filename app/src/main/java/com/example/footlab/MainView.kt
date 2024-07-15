@@ -1,14 +1,13 @@
 package com.example.footlab
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.*
 import com.example.footlab.databinding.ActivityMainViewBinding
 import com.google.android.material.navigation.NavigationView
 
@@ -50,7 +49,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         when (item.itemId) {
             R.id.nav_profile -> openFragment(PerfilFragment())
             R.id.nav_history -> openFragment(HistorialFragment())
-            R.id.nav_logout -> openFragment(CerrarSesionFragment())
+            R.id.nav_logout -> cerrarSesion()
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -62,6 +61,19 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         } else {
             super.onBackPressed()
         }
+    }
+
+    fun cerrarSesion() {
+        // Borrar las credenciales almacenadas en SharedPreferences
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+
+        // Redirigir al usuario a la pantalla de inicio de sesión
+        val intent = Intent(this, LoginView::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun openFragment(fragment: Fragment) {

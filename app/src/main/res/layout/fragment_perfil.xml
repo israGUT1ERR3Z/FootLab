@@ -7,11 +7,11 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/bienvenida"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Perfil"
         android:gravity="center"
         android:textColor="@color/purple_700"
-        android:textSize="36sp"/>
+        android:textSize="36sp" />
 
 </FrameLayout>
