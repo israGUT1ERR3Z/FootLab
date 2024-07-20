@@ -8,21 +8,28 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.*
 import com.example.footlab.databinding.ActivityMainViewBinding
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
+import java.util.*
 
 class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var fragmentManager: FragmentManager
     private lateinit var binding: ActivityMainViewBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
 
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
@@ -33,6 +40,10 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onCreate(savedInstanceState)
         binding = ActivityMainViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         setSupportActionBar(binding.toolbar)
 
@@ -82,8 +93,83 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            // Do something with the captured image, e.g., display it in an ImageView
-            // imageView.setImageBitmap(imageBitmap)
+            uploadImageToFirebase(imageBitmap)
+        }
+    }
+
+    private fun showAlert(message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Mensaje")
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun uploadImageToFirebase(imageBitmap: Bitmap) {
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val username = sharedPreferences.getString("Username", null)
+
+        if (username != null) {
+            // Configurar la referencia en Firebase Storage
+            val storageRef = FirebaseStorage.getInstance().reference.child("${System.currentTimeMillis()}.jpg")
+            val baos = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+
+            // Subir la imagen a Firebase Storage
+            storageRef.putBytes(data)
+                .addOnSuccessListener {
+                    // Obtener la URL de descarga
+                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+                        saveImageInfoToFirestore(uri.toString())
+                    }
+                }
+                .addOnFailureListener {
+                    showAlert("Error al cargar la imagen")
+                }
+        } else {
+            showAlert("Usuario no encontrado")
+        }
+    }
+
+    private fun saveImageInfoToFirestore(imageUrl: String) {
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val username = sharedPreferences.getString("Username", null)
+
+        if (username != null) {
+            val campo = if (username.contains("@")) "Email" else "UserName"
+
+            FirebaseFirestore.getInstance().collection("Pacientes").whereEqualTo(campo, username).get()
+                .addOnSuccessListener { documentos ->
+                    if (!documentos.isEmpty) {
+                        val batch = FirebaseFirestore.getInstance().batch()
+
+                        for (paciente in documentos.documents) {
+                            val docRef = paciente.reference
+                            val fotos = paciente.get("Fotos") as? ArrayList<HashMap<String, Any>> ?: arrayListOf()
+                            val currentDate = Timestamp(Date())
+                            val newPhoto = hashMapOf("Fecha" to currentDate, "URL" to imageUrl)
+                            batch.update(docRef, "Fotos", FieldValue.arrayUnion(newPhoto))
+                        }
+                        batch.commit()
+                            .addOnSuccessListener {
+                                showAlert("Imagen guardada exitosamente")
+                            }
+                            .addOnFailureListener {
+                                showAlert("Error al guardar la imagen")
+                            }
+                    } else {
+                        showAlert("Usuario no encontrado")
+                    }
+                }
+                .addOnFailureListener {
+                    showAlert("Failed to retrieve document")
+                }
+        } else {
+            showAlert("Username not found")
         }
     }
 

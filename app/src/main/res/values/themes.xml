@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.FootLab" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Colores primarios -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">#DEDFE5</item>
+        <item name="colorPrimaryVariant">#2752D4</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Colores secundarios -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -16,8 +16,8 @@
 
     <style name="Theme.Design.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Colores primarios -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">#DEDFE5</item>
+        <item name="colorPrimaryVariant">#2752D4</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Colores secundarios -->
         <item name="colorSecondary">@color/teal_200</item>
