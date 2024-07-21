@@ -16,22 +16,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FootLab"
         tools:targetApi="31">
+
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/Theme.Splash"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".Item_Galeria"
             android:exported="false" />
+
         <activity
             android:name=".MainView"
             android:exported="false"
             android:theme="@style/Theme.Design.NoActionBar" />
+
         <activity
             android:name=".LoginView"
             android:exported="true"
             android:theme="@style/Theme.Design.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data

@@ -28,5 +28,9 @@
         <!-- Otros ajustes específicos del tema -->
     </style>
 
-
+    <!-- Splash Theme -->
+    <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
 </resources>
