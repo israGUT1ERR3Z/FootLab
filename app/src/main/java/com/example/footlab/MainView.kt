@@ -34,6 +34,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
         const val REQUEST_CAMERA_PERMISSION = 200
+        const val HOME_FRAGMENT_TAG = "home_fragment"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +63,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             true
         }
         fragmentManager = supportFragmentManager
-        openFragment(HomeFragment())
+        openFragment(HomeFragment(), HOME_FRAGMENT_TAG)
 
         binding.fab.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -175,6 +176,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_home -> openFragment(HomeFragment(), HOME_FRAGMENT_TAG)
             R.id.nav_profile -> openFragment(PerfilFragment())
             R.id.nav_history -> openFragment(HistorialFragment())
             R.id.nav_logout -> cerrarSesion()
@@ -187,7 +189,12 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            val currentFragment = fragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is HomeFragment) {
+                openFragment(HomeFragment(), HOME_FRAGMENT_TAG)
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -202,9 +209,14 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         finish()
     }
 
-    private fun openFragment(fragment: Fragment) {
+    private fun openFragment(fragment: Fragment, tag: String? = null) {
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        if (tag != null) {
+            fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
+        } else {
+            fragmentTransaction.replace(R.id.fragment_container, fragment)
+            fragmentTransaction.addToBackStack(null)
+        }
         fragmentTransaction.commit()
     }
 }
