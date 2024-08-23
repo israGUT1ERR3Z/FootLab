@@ -8,11 +8,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.*
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.footlab.databinding.ActivityMainViewBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
@@ -48,7 +52,13 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         setSupportActionBar(binding.toolbar)
 
-        val toggle = ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.nav_open, R.string.nav_close)
+        val toggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.nav_open,
+            R.string.nav_close
+        )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -57,17 +67,26 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         binding.bottomNavigation.background = null
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.bottom_gallery -> openFragment(GaleriaFragment())
+                R.id.bottom_gallery -> openFragment(AnalizarFragment()) // Cambiado aquí
                 R.id.bottom_help -> openFragment(AyudaFragment())
             }
             true
         }
+
         fragmentManager = supportFragmentManager
         openFragment(HomeFragment(), HOME_FRAGMENT_TAG)
 
         binding.fab.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CAMERA_PERMISSION
+                )
             } else {
                 openCamera()
             }
@@ -81,12 +100,22 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CAMERA_PERMISSION && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            openCamera()
-        } else {
-            Toast.makeText(this, "Camera permission is required to use the camera", Toast.LENGTH_SHORT).show()
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Camera permission is required to use the camera",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -114,16 +143,13 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         val username = sharedPreferences.getString("Username", null)
 
         if (username != null) {
-            // Configurar la referencia en Firebase Storage
-            val storageRef = FirebaseStorage.getInstance().reference.child("${System.currentTimeMillis()}.jpg")
+            val storageRef = storage.reference.child("${System.currentTimeMillis()}.jpg")
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
 
-            // Subir la imagen a Firebase Storage
             storageRef.putBytes(data)
                 .addOnSuccessListener {
-                    // Obtener la URL de descarga
                     storageRef.downloadUrl.addOnSuccessListener { uri ->
                         saveImageInfoToFirestore(uri.toString())
                     }
@@ -143,10 +169,11 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         if (username != null) {
             val campo = if (username.contains("@")) "Email" else "UserName"
 
-            FirebaseFirestore.getInstance().collection("Pacientes").whereEqualTo(campo, username).get()
+            firestore.collection("Pacientes").whereEqualTo(campo, username)
+                .get()
                 .addOnSuccessListener { documentos ->
                     if (!documentos.isEmpty) {
-                        val batch = FirebaseFirestore.getInstance().batch()
+                        val batch = firestore.batch()
 
                         for (paciente in documentos.documents) {
                             val docRef = paciente.reference
@@ -167,10 +194,10 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     }
                 }
                 .addOnFailureListener {
-                    showAlert("Failed to retrieve document")
+                    showAlert("Error al recuperar el documento")
                 }
         } else {
-            showAlert("Username not found")
+            showAlert("Usuario no encontrado")
         }
     }
 
@@ -198,7 +225,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-    fun cerrarSesion() {
+    private fun cerrarSesion() {
         val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.clear()
@@ -211,10 +238,8 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     private fun openFragment(fragment: Fragment, tag: String? = null) {
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        if (tag != null) {
-            fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
-        } else {
-            fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
+        if (tag == null) {
             fragmentTransaction.addToBackStack(null)
         }
         fragmentTransaction.commit()
