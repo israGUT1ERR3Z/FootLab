@@ -41,7 +41,9 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.15.1' // Use the latest stable version
+    kapt 'com.github.bumptech.glide:compiler:4.15.1' // Make sure this matches the Glide version
+    implementation 'org.tensorflow:tensorflow-lite:2.13.0'  // Usa la versión adecuada para tu proyectomplementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'

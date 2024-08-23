@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -39,8 +38,12 @@
         <activity
             android:name=".LoginView"
             android:exported="true"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
+
+        <!-- Declarar ResultsActivity -->
+        <activity
+            android:name=".ResultsActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
