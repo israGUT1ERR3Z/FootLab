@@ -34,20 +34,29 @@
             android:layout_centerVertical="true">
 
             <Button
-                android:id="@+id/botonAnalizarItem"
+                android:id="@+id/botonSegmentarItem"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="39dp"
                 android:background="@color/purple_700"
-                android:text="Analizar"
+                android:text="@string/segmentar"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/botonClasificarItem"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:background="@color/purple_700"
+                android:text="@string/clasificar"
                 android:textColor="#000000"
                 android:layout_marginBottom="8dp" />
 
             <Button
                 android:id="@+id/botonEliminarItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
                 android:background="@color/purple_700"
-                android:text="Eliminar"
+                android:text="@string/eliminar"
                 android:textColor="#000000" />
 
         </LinearLayout>

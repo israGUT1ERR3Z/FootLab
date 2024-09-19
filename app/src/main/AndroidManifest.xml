@@ -45,9 +45,15 @@
             android:name=".ResultsActivity"
             android:exported="true" />
 
+        <!-- Declarar ClasificacionResultsActivity -->
+        <activity
+            android:name=".ClasificacionResultsActivity"
+            android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

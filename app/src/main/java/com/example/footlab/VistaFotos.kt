@@ -22,7 +22,7 @@ class VistaFotos(private val fotos: List<String>, private val onAnalizarClick: (
             .load(urlFoto)
             .into(holder.imagenFoto)
 
-        holder.botonAnalizar.setOnClickListener {
+        holder.botonSegmentar.setOnClickListener {
             onAnalizarClick(urlFoto)
         }
     }
@@ -33,6 +33,6 @@ class VistaFotos(private val fotos: List<String>, private val onAnalizarClick: (
 
     class VistaFoto(view: View) : RecyclerView.ViewHolder(view) {
         val imagenFoto: ImageView = view.findViewById(R.id.imagenFotoItem)
-        val botonAnalizar: Button = view.findViewById(R.id.botonAnalizarItem)
+        val botonSegmentar: Button = view.findViewById(R.id.botonSegmentarItem)
     }
 }

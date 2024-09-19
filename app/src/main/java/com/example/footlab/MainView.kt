@@ -1,5 +1,7 @@
 package com.example.footlab
 
+import ClusterUtils
+import ImageClassifier
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.footlab.databinding.ActivityMainViewBinding
+import com.example.footlab.utils.ImageUtils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +28,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
-import java.util.*
+import java.util.Date
 
 class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +37,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+    private lateinit var clusters: Array<FloatArray>
 
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
@@ -67,7 +71,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         binding.bottomNavigation.background = null
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.bottom_gallery -> openFragment(AnalizarFragment()) // Cambiado aquí
+                R.id.bottom_gallery -> openFragment(AnalizarFragment())
                 R.id.bottom_help -> openFragment(AyudaFragment())
             }
             true
@@ -91,6 +95,15 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                 openCamera()
             }
         }
+
+        // Load clusters from assets
+        loadClusters()
+    }
+
+    private fun loadClusters() {
+        val clusterUtils = ClusterUtils()
+        val jsonArray = clusterUtils.loadClustersFromAssets(this)
+        clusters = clusterUtils.processClusters(jsonArray)
     }
 
     private fun openCamera() {
@@ -123,7 +136,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            uploadImageToFirebase(imageBitmap)
+            classifyImage(imageBitmap)
         }
     }
 
@@ -136,6 +149,23 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    private fun classifyImage(bitmap: Bitmap) {
+        val classifier = ImageClassifier(clusters)
+
+        // Convert bitmap to pixel values
+        val pixelValues = ImageUtils.bitmapToPixelArray(bitmap)
+
+        // Classify the image pixels
+        val classifications = classifier.classifyImage(pixelValues)
+
+        // Handle the classified result (e.g., display in a new activity)
+        openResultsActivity(bitmap, classifications)
+    }
+
+    private fun openResultsActivity(bitmap: Bitmap, classifications: Any) {
+        // Implement this method to display the results
     }
 
     private fun uploadImageToFirebase(imageBitmap: Bitmap) {
@@ -239,9 +269,11 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     private fun openFragment(fragment: Fragment, tag: String? = null) {
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
-        if (tag == null) {
+        if (tag == HOME_FRAGMENT_TAG) {
             fragmentTransaction.addToBackStack(null)
         }
         fragmentTransaction.commit()
     }
+
+
 }

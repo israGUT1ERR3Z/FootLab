@@ -2,22 +2,16 @@ package com.example.footlab
 
 import android.app.AlertDialog
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
-import kotlin.concurrent.thread
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.Timestamp
+import java.io.ByteArrayOutputStream
 import java.util.Date
 
 class ResultsActivity : AppCompatActivity() {
@@ -40,52 +34,49 @@ class ResultsActivity : AppCompatActivity() {
         val maskImageUrl = intent.getStringExtra("MASK_IMAGE_URL")
         val segmentedImageUrl = intent.getStringExtra("SEGMENTED_IMAGE_URL")
 
-        // Load images asynchronously
+        // Load images asynchronously using Glide
         maskImageUrl?.let { url ->
-            loadImageAsync(url) { bitmap ->
-                bitmap?.let { maskBitmap ->
-                    maskImageView.setImageBitmap(maskBitmap)
-                }
-            }
+            loadImage(url, maskImageView)
         }
 
         segmentedImageUrl?.let { url ->
-            loadImageAsync(url) { bitmap ->
-                bitmap?.let { segmentedBitmap ->
-                    segmentedImageView.setImageBitmap(segmentedBitmap)
-                }
-            }
+            loadImage(url, segmentedImageView)
         }
 
+        // Combine images and upload if both URLs are provided
         if (maskImageUrl != null && segmentedImageUrl != null) {
-            loadImageAsync(maskImageUrl) { maskBitmap ->
-                if (maskBitmap != null) {
-                    loadImageAsync(segmentedImageUrl) { segmentedBitmap ->
-                        if (segmentedBitmap != null) {
-                            val combinedBitmap = combineImages(maskBitmap, segmentedBitmap)
-                            uploadImageToFirebase(combinedBitmap) // Subir la imagen combinada
-                        }
+            loadImage(maskImageUrl) { maskBitmap ->
+                loadImage(segmentedImageUrl) { segmentedBitmap ->
+                    if (maskBitmap != null && segmentedBitmap != null) {
+                        val combinedBitmap = combineImages(maskBitmap, segmentedBitmap)
+                        uploadImageToFirebase(combinedBitmap) // Subir la imagen combinada
+                    } else {
+                        showAlert("Error al cargar las imágenes")
                     }
                 }
             }
         }
     }
 
-    private fun loadImageAsync(url: String, callback: (Bitmap?) -> Unit) {
-        thread {
-            try {
-                val connection = URL(url).openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val inputStream: InputStream = connection.inputStream
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream.close()  // Close InputStream after use
-                runOnUiThread { callback(bitmap) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                runOnUiThread { callback(null) }
-            }
-        }
+    private fun loadImage(url: String, imageView: ImageView? = null, callback: ((Bitmap?) -> Unit)? = null) {
+        Glide.with(this)
+            .asBitmap()
+            .load(url)
+            .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+                    imageView?.setImageBitmap(resource)
+                    callback?.invoke(resource)
+                }
+
+                override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {
+                    // Handle cleanup if needed
+                }
+
+                override fun onLoadFailed(errorDrawable: android.graphics.drawable.Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    showAlert("Error al cargar la imagen desde $url")
+                }
+            })
     }
 
     private fun combineImages(maskBitmap: Bitmap, segmentedBitmap: Bitmap): Bitmap {
@@ -106,7 +97,6 @@ class ResultsActivity : AppCompatActivity() {
         val username = sharedPreferences.getString("Username", null)
 
         if (username != null) {
-            // Utiliza firebaseStorage en lugar de storage
             val storageRef = firebaseStorage.reference.child("${System.currentTimeMillis()}.jpg")
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -141,7 +131,7 @@ class ResultsActivity : AppCompatActivity() {
 
                         for (paciente in documentos.documents) {
                             val docRef = paciente.reference
-                            val fotos = paciente.get("Diagnosticos") as? ArrayList<HashMap<String, Any>> ?: arrayListOf()
+                            val resultados = paciente.get("Resultados") as? ArrayList<HashMap<String, Any>> ?: arrayListOf()
                             val currentDate = Timestamp(Date())
                             val newPhoto = hashMapOf("Fecha" to currentDate, "URL" to imageUrl)
                             batch.update(docRef, "Resultados", FieldValue.arrayUnion(newPhoto))

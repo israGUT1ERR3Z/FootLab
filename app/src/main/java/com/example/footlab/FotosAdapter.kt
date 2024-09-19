@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,15 @@ class FotosAdapter(
             .load(url)
             .into(holder.imagenFotoItem)
 
-        holder.botonAnalizarItem.setOnClickListener {
+        // Handle "Clasificar" button click
+        holder.botonClasificarItem.setOnClickListener {
+            val intent = Intent(context, ClasificacionResultsActivity::class.java)
+            intent.putExtra("IMAGE_URL", url)
+            context.startActivity(intent)
+        }
+
+        // Handle "Segmentar" button click (for existing segmentation functionality)
+        holder.botonSegmentarItem.setOnClickListener {
             thread {
                 val bitmap = loadBitmapFromURL(url)
                 bitmap?.let {
@@ -124,16 +131,17 @@ class FotosAdapter(
                         callback(uri.toString())
                     }
                     .addOnFailureListener {
-                        callback("") // Manejo del error de descarga de URL
+                        callback("") // Handle URL download error
                     }
             }
             .addOnFailureListener {
-                callback("") // Manejo del error de subida de imagen
+                callback("") // Handle image upload error
             }
     }
 
     class FotosViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imagenFotoItem: ImageView = itemView.findViewById(R.id.imagenFotoItem)
-        val botonAnalizarItem: Button = itemView.findViewById(R.id.botonAnalizarItem)
+        val botonClasificarItem: Button = itemView.findViewById(R.id.botonClasificarItem)
+        val botonSegmentarItem: Button = itemView.findViewById(R.id.botonSegmentarItem)
     }
 }
