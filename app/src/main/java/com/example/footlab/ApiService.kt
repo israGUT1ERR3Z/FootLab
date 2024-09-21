@@ -7,3 +7,4 @@ interface ApiService {
     @POST("/predict")
     fun predict(@Body requestBody: PredictionModels.PredictionRequest): Call<PredictionModels.PredictionResponse>
 }
+// Hola bbcitos 
