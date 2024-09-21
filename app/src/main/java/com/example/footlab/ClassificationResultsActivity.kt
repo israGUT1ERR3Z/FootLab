@@ -1,18 +1,22 @@
 package com.example.footlab
 
-import ClusterUtils
-import ImageClassifier
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.footlab.R.id.botonClasificarItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -20,8 +24,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ClasificacionResultsActivity : AppCompatActivity() {
-
-    private lateinit var classifier: ImageClassifier
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +35,16 @@ class ClasificacionResultsActivity : AppCompatActivity() {
         val tissue3ImageView = findViewById<ImageView>(R.id.tissue3ImageView)
         val resultTextView = findViewById<TextView>(R.id.classificationResultTextView)
 
-        val imageUrl = intent.getStringExtra("IMAGE_URL")
+        val classifyButton = findViewById<Button>(R.id.botonClasificarItem)
 
-        // Load clusters from assets
-        val clusterUtils = ClusterUtils()
-        val clustersJsonArray = clusterUtils.loadClustersFromAssets(this)
-        val clusters = clusterUtils.processClusters(clustersJsonArray)
-        classifier = ImageClassifier(clusters)
+        if (classifyButton == null) {
+            Log.e("ClasificacionResultsActivity", "Button with ID botonClasificarItem not found.")
+        } else {
+            Log.d("ClasificacionResultsActivity", "Button with ID botonClasificarItem found.")
+        }
+
+
+        val imageUrl = intent.getStringExtra("IMAGE_URL")
 
         imageUrl?.let { url ->
             lifecycleScope.launch {
@@ -47,19 +52,22 @@ class ClasificacionResultsActivity : AppCompatActivity() {
                 bitmap?.let {
                     val resizedBitmap = Bitmap.createScaledBitmap(it, 224, 224, true)
                     originalImageView.setImageBitmap(resizedBitmap)
-                    val pixelValues = convertBitmapToPixelValues(resizedBitmap)
-                    val classificationResults = withContext(Dispatchers.Default) {
-                        classifier.classifyImage(pixelValues)
+                    classifyButton.setOnClickListener {
+                        val pixelValues = convertBitmapToPixelValues(resizedBitmap)
+                        classifyImage(pixelValues, { predictions ->
+                            // Handle null predictions
+                            val nonNullPredictions = predictions ?: Array(resizedBitmap.width * resizedBitmap.height) { 0 }
+                            val tissueBitmaps = applyClassificationToBitmaps(resizedBitmap, nonNullPredictions)
+                            // Display the classified images in respective ImageViews
+                            tissue1ImageView.setImageBitmap(tissueBitmaps.getOrNull(0))
+                            tissue2ImageView.setImageBitmap(tissueBitmaps.getOrNull(1))
+                            tissue3ImageView.setImageBitmap(tissueBitmaps.getOrNull(2))
+                            // Display classification results
+                            resultTextView.text = "Classification: ${nonNullPredictions.joinToString()}"
+                        }, { error ->
+                            resultTextView.text = "Error: ${error?.message}"
+                        })
                     }
-                    val tissueBitmaps = applyClassificationToBitmaps(resizedBitmap, classificationResults)
-
-                    // Display the classified images in respective ImageViews
-                    tissue1ImageView.setImageBitmap(tissueBitmaps.getOrNull(0))
-                    tissue2ImageView.setImageBitmap(tissueBitmaps.getOrNull(1))
-                    tissue3ImageView.setImageBitmap(tissueBitmaps.getOrNull(2))
-
-                    // Display classification results
-                    resultTextView.text = "Classification: ${classificationResults.joinToString()}"
                 }
             }
         }
@@ -113,15 +121,15 @@ class ClasificacionResultsActivity : AppCompatActivity() {
     private fun convertBitmapToPixelValues(bitmap: Bitmap): Array<FloatArray> {
         val width = bitmap.width
         val height = bitmap.height
-        val pixelValues = Array(width * height) { FloatArray(3) }  // One array for each pixel (RGB)
+        val pixelValues = Array(width * height) { FloatArray(3) }
 
         for (y in 0 until height) {
             for (x in 0 until width) {
                 val pixel = bitmap.getPixel(x, y)
                 val index = y * width + x
-                pixelValues[index][0] = (pixel shr 16 and 0xFF) / 255f  // Red
-                pixelValues[index][1] = (pixel shr 8 and 0xFF) / 255f   // Green
-                pixelValues[index][2] = (pixel and 0xFF) / 255f         // Blue
+                pixelValues[index][0] = (pixel shr 16 and 0xFF) / 255f
+                pixelValues[index][1] = (pixel shr 8 and 0xFF) / 255f
+                pixelValues[index][2] = (pixel and 0xFF) / 255f
             }
         }
         return pixelValues
@@ -130,7 +138,6 @@ class ClasificacionResultsActivity : AppCompatActivity() {
     private fun applyClassificationToBitmaps(bitmap: Bitmap, classificationResults: Array<Int>): Array<Bitmap> {
         val width = bitmap.width
         val height = bitmap.height
-        val pixelCount = width * height
 
         val segmentedBitmaps = Array(3) { Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888) }
         val colors = arrayOf(Color.RED, Color.GREEN, Color.BLUE)
@@ -147,4 +154,26 @@ class ClasificacionResultsActivity : AppCompatActivity() {
 
         return segmentedBitmaps
     }
+
+    private fun classifyImage(pixelValues: Array<FloatArray>, onResult: (Array<Int>?) -> Unit, onError: (Throwable?) -> Unit) {
+        // Convert FloatArray to DoubleArray
+        val doublePixelValues = pixelValues.map { it.map { it.toDouble() }.toList() }
+
+        val request = PredictionModels.PredictionRequest(features = doublePixelValues)
+        RetrofitClient.apiService.predict(request).enqueue(object : Callback<PredictionModels.PredictionResponse> {
+            override fun onResponse(call: Call<PredictionModels.PredictionResponse>, response: Response<PredictionModels.PredictionResponse>) {
+                if (response.isSuccessful) {
+                    val predictions = response.body()?.predictions?.toTypedArray()
+                    onResult(predictions)
+                } else {
+                    onError(null)
+                }
+            }
+
+            override fun onFailure(call: Call<PredictionModels.PredictionResponse>, t: Throwable) {
+                onError(t)
+            }
+        })
+    }
+
 }
