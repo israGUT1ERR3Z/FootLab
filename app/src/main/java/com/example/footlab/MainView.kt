@@ -1,7 +1,5 @@
 package com.example.footlab
 
-import ClusterUtils
-import ImageClassifier
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.footlab.databinding.ActivityMainViewBinding
-import com.example.footlab.utils.ImageUtils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -96,15 +93,9 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             }
         }
 
-        // Load clusters from assets
-        loadClusters()
     }
 
-    private fun loadClusters() {
-        val clusterUtils = ClusterUtils()
-        val jsonArray = clusterUtils.loadClustersFromAssets(this)
-        clusters = clusterUtils.processClusters(jsonArray)
-    }
+
 
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -132,13 +123,7 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            classifyImage(imageBitmap)
-        }
-    }
+
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(this)
@@ -151,18 +136,6 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         dialog.show()
     }
 
-    private fun classifyImage(bitmap: Bitmap) {
-        val classifier = ImageClassifier(clusters)
-
-        // Convert bitmap to pixel values
-        val pixelValues = ImageUtils.bitmapToPixelArray(bitmap)
-
-        // Classify the image pixels
-        val classifications = classifier.classifyImage(pixelValues)
-
-        // Handle the classified result (e.g., display in a new activity)
-        openResultsActivity(bitmap, classifications)
-    }
 
     private fun openResultsActivity(bitmap: Bitmap, classifications: Any) {
         // Implement this method to display the results
