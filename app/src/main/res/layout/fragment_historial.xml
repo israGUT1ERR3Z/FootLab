@@ -1,17 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".HistorialFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Historial"
-        android:gravity="center"
-        android:textColor="@color/purple_700"
-        android:textSize="36sp"/>
+    <Button
+        android:id="@+id/botonVerHistorialClinico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VER HISTORIAL CLÍNICO"
+        android:backgroundTint="#27276F"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="190dp" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/botonVerResultados"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="280dp"
+        android:backgroundTint="#27276F"
+        android:text="VER RESULTADOS" />
+</RelativeLayout>

@@ -53,7 +53,6 @@
                         android:background="@android:color/transparent"
                         app:labelVisibilityMode="labeled"
                         app:menu="@menu/bottom_menu" />
-
                 </com.google.android.material.bottomappbar.BottomAppBar>
 
                 <!-- FloatingActionButton -->
