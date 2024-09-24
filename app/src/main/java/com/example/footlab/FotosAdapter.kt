@@ -40,8 +40,11 @@ class FotosAdapter(
             .load(url)
             .into(holder.imagenFotoItem)
 
+<<<<<<< HEAD
         // Handle "Clasificar" button click
 
+=======
+>>>>>>> master
 
         // Handle "Segmentar" button click (for existing segmentation functionality)
         holder.botonSegmentarItem.setOnClickListener {

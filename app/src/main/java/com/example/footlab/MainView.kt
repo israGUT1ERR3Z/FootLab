@@ -34,7 +34,6 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-    private lateinit var clusters: Array<FloatArray>
 
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
@@ -92,7 +91,10 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                 openCamera()
             }
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     }
 
 
@@ -123,7 +125,10 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(this)
@@ -136,7 +141,10 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         dialog.show()
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     private fun openResultsActivity(bitmap: Bitmap, classifications: Any) {
         // Implement this method to display the results
     }
