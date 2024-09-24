@@ -40,12 +40,6 @@ class FotosAdapter(
             .load(url)
             .into(holder.imagenFotoItem)
 
-        // Handle "Clasificar" button click
-        holder.botonClasificarItem.setOnClickListener {
-            val intent = Intent(context, ClasificacionResultsActivity::class.java)
-            intent.putExtra("IMAGE_URL", url)
-            context.startActivity(intent)
-        }
 
         // Handle "Segmentar" button click (for existing segmentation functionality)
         holder.botonSegmentarItem.setOnClickListener {
