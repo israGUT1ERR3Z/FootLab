@@ -11,5 +11,16 @@
     <string name="segmentar">Segmentar</string>
     <string name="original_image_description">Original Image</string>
     <string name="classified_image_description">Classified Image\n</string>
+    <string name="historial_clinico">Historial Clinico</string>
+    <string name="nombre_completo">Nombre*</string>
+    <string name="ingresa_tu_nombre_completo">Ingresa tu nombre completo</string>
+    <string name="fecha_de_nacimiento_dd_mm_yyyy">Fecha de nacimiento (dd/mm/yyyy)*</string>
+    <string name="ingresa_fecha_de_nacimiento_dd_mm_yyyy">Ingresa fecha de nacimiento (dd/mm/yyyy)</string>
+    <string name="estatura_cm">Estatura (cm)</string>
+    <string name="ingresa_estatura_cm">Ej. 180</string>
+    <string name="ingresa_peso">Ej. 55.5</string>
+    <string name="peso_kg"> Peso (kg)</string>
+    <string name="imc">IMC</string>
+    <string name="ingresa_imc">IMC</string>
 
 </resources>

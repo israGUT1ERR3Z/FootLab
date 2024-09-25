@@ -1,454 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HistorialClinicoFragment"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="100dp">
+    android:background="@color/background">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewHistorial"
+            android:layout_marginTop="0dp"
+            android:text="@string/historial_clinico"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold"/>
+
+        <!-- Campos del historial clínico -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewNombres"
+            android:layout_below="@id/textViewHistorial"
+            android:text="@string/nombre_completo"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16sp"
+            android:layout_marginTop="45dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/editTextNombres"
+            android:hint="@string/ingresa_tu_nombre_completo"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@id/textViewNombres"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewFechaNacimiento"
+            android:layout_below="@id/textViewNombres"
+            android:text="@string/fecha_de_nacimiento_dd_mm_yyyy"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16sp"
+            android:layout_marginTop="45dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextFechaNacimiento"
+            android:hint="@string/ingresa_fecha_de_nacimiento_dd_mm_yyyy"
+            android:inputType="date"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@id/textViewFechaNacimiento"
+            android:background="@drawable/border"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/editTextFechaNacimiento"
+            android:layout_marginTop="16dp"
+            android:padding="0dp"> <!-- Removed extra padding -->
 
-            <TextView
-                android:id="@+id/textViewHistorial"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="Historial Clínico"
-                android:textColor="#000000"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp"> <!-- Added a margin to align fields properly -->
 
-            <!-- Campos del historial clínico -->
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="4dp"
+                    android:text="@string/estatura_cm"
+                    android:textColor="#555555"
+                    android:textSize="16sp"
+                    android:layout_gravity="start"/> <!-- Align text to the start -->
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextEstatura"
+                    android:hint="@string/ingresa_estatura_cm"
+                    android:textSize="16sp"
+                    android:padding="1dp"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:ems="6"
+                    android:background="@drawable/border"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Nombres"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"> <!-- Adjust margins for better spacing -->
 
-            <EditText
-                android:id="@+id/editTextNombres"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese nombres"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/peso_kg"
+                    android:textSize="16sp"
+                    android:textColor="#555555"
+                    android:paddingBottom="4dp"
+                    android:layout_gravity="start"/> <!-- Align text to the start -->
 
-            <TextView
-                android:layout_width="wrap_content"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextPeso"
+                    android:hint="@string/ingresa_peso"
+                    android:textSize="16sp"
+                    android:padding="1dp"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:ems="6"
+                    android:background="@drawable/border"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Apellidos"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp"> <!-- Adjust margins for proper alignment -->
 
-            <EditText
-                android:id="@+id/editTextApellidos"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese apellidos"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/imc"
+                    android:textSize="16sp"
+                    android:textColor="#555555"
+                    android:paddingBottom="4dp"
+                    android:layout_gravity="start"/> <!-- Align text to the start -->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Edad"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextEdad"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese edad"
-                android:inputType="number"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Talla (m)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextTalla"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese talla (m)"
-                android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Peso (kg)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextPeso"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese peso (kg)"
-                android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="IMC"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextIMC"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese IMC"
-                android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Temperatura (°C)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextTemperatura"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese temperatura (°C)"
-                android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Frecuencia respiratoria (rpm)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextFrecuenciaRespiratoria"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese frecuencia respiratoria (rpm)"
-                android:inputType="number"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Frecuencia cardiaca (lpm)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextFrecuenciaCardiaca"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese frecuencia cardiaca (lpm)"
-                android:inputType="number"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Tensión arterial (mmHg)"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextTensionArterial"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Ingrese tensión arterial (mmHg)"
-                android:inputType="number"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <!-- Campos de texto extendido (textarea) -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Tabaquismo"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextTabaquismo"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese tabaquismo"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Alcoholismo"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextAlcoholismo"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese alcoholismo"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Sedentarismo"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextSedentarismo"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese sedentarismo"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Hábitos alimenticios"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextHabitosAlimenticios"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese hábitos alimenticios"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Tipo Diabetes"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextTipoDiabetes"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese tipo de diabetes"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Hipertensión arterial"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextHipertensionArterial"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese hipertensión arterial"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Dislipidemia"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextDislipidemia"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese dislipidemia"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Obesidad"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextObesidad"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese obesidad"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Control glucémico"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextControlGlicemico"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese control glucémico"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Manejo del pie diabético"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextManejoPieDiabetico"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese manejo del pie diabético"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Control de comorbilidades"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextControlComorbilidades"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_background"
-                android:gravity="top"
-                android:hint="Ingrese control de comorbilidades"
-                android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:textColorHint="#605F5F" />
-
-            <Button
-                android:id="@+id/buttonGuardar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="#27276F"
-                android:text="Guardar" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextIMC"
+                    android:hint="@string/ingresa_imc"
+                    android:textSize="16sp"
+                    android:padding="1dp"
+                    android:inputType="numberDecimal"
+                    android:enabled="false"
+                    android:maxLength="5"
+                    android:ems="6"
+                    android:background="@drawable/border" />
+            </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+
+
