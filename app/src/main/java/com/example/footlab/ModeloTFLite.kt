@@ -13,7 +13,7 @@ class ModeloTFLite(context: Context) {
         val assetManager = context.assets
         val fileDescriptor = assetManager.openFd(modelName)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channelgit
+        val fileChannel = inputStream.channel // Corrige aquí
         val startOffset = fileDescriptor.startOffset
         val declaredLength = fileDescriptor.declaredLength
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)

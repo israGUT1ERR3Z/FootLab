@@ -1,5 +1,6 @@
 package com.example.footlab
 
+import AnalizarFragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -91,10 +92,6 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                 openCamera()
             }
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
     }
 
 
@@ -125,10 +122,6 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(this)
@@ -141,10 +134,6 @@ class MainView : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         dialog.show()
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
     private fun openResultsActivity(bitmap: Bitmap, classifications: Any) {
         // Implement this method to display the results
     }

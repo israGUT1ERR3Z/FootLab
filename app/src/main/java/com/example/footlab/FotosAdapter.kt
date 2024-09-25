@@ -22,11 +22,14 @@ import java.net.URL
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.concurrent.thread
+import okhttp3.MediaType.Companion.toMediaType
+
 
 class FotosAdapter(
     private val context: Context,
     private val fotosUrls: List<String>,
-    private val interpreter: Interpreter
+    private val interpreter: Interpreter,
+    private val onClasificarClick: (String) -> Unit // Callback para el botón de clasificar
 ) : RecyclerView.Adapter<FotosAdapter.FotosViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FotosViewHolder {
@@ -40,13 +43,12 @@ class FotosAdapter(
             .load(url)
             .into(holder.imagenFotoItem)
 
-<<<<<<< HEAD
-        // Handle "Clasificar" button click
+        // Listener para el botón de clasificar
+        holder.botonClasificarItem.setOnClickListener {
+            onClasificarClick(url) // Llama al callback con la URL de la foto
+        }
 
-=======
->>>>>>> master
-
-        // Handle "Segmentar" button click (for existing segmentation functionality)
+        // Listener para el botón de segmentar
         holder.botonSegmentarItem.setOnClickListener {
             thread {
                 val bitmap = loadBitmapFromURL(url)
@@ -126,16 +128,10 @@ class FotosAdapter(
         imageRef.putBytes(data)
             .addOnSuccessListener {
                 imageRef.downloadUrl
-                    .addOnSuccessListener { uri ->
-                        callback(uri.toString())
-                    }
-                    .addOnFailureListener {
-                        callback("") // Handle URL download error
-                    }
+                    .addOnSuccessListener { uri -> callback(uri.toString()) }
+                    .addOnFailureListener { callback("") } // Manejar error de descarga de URL
             }
-            .addOnFailureListener {
-                callback("") // Handle image upload error
-            }
+            .addOnFailureListener { callback("") } // Manejar error de subida de imagen
     }
 
     class FotosViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
