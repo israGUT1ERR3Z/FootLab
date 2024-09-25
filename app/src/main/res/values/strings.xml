@@ -22,5 +22,33 @@
     <string name="peso_kg"> Peso (kg)</string>
     <string name="imc">IMC</string>
     <string name="ingresa_imc">IMC</string>
+    <string name="temperatura_c">Temperatura (°C)</string>
+    <string name="ingresa_frecuencia_respiratoria">Ingresa Frecuencia Respiratoria (rpm)</string>
+    <string name="frecuencia_respiratoria">Frecuencia Respiratoria</string>
+    <string name="frecuencia_cardiaca">Frecuencia Cardiaca</string>
+    <string name="ingresa_frecuencia_cardiaca_lpm">Ingresa Frecuencia Cardiaca (lpm)</string>
+    <string name="tensi_n_arterial_mmhg">Tensión Arterial (mmHg)</string>
+    <string name="ingresa_tensi_n_arterial_mmhg">Ingresa Tensión Arterial (mmHg)</string>
+    <string name="tabaquismo_si_no">Ingresa Sí o No</string>
+    <string name="tabaquismo">Tabaquismo</string>
+    <string name="alcoholismo">Alcoholismo</string>
+    <string name="alcoholismo_si_no">Ingresa Sí o No</string>
+    <string name="sedentarismo_si_no">Ingresa Sí o No</string>
+    <string name="sedentarismo">Sedentarismo</string>
+    <string name="habitos_alimenticios">Hábitos Alimenticios</string>
+    <string name="ingresa_habitos_alimenticios">Ingresa hábitos alimenticios</string>
+    <string name="ingresa_el_tipo_de_diabetes">Ingresa el tipo de diabetes</string>
+    <string name="tipo_de_diabetes">Tipo de Diabetes</string>
+    <string name="dislipidemia">Dislipidemia</string>
+    <string name="dislipidemia_ingresa_si_o_no">Ingresa Sí o No</string>
+    <string name="obesidad">Obesidad</string>
+    <string name="obesidad_ingresa_si_o_no">Ingresa Sí o No</string>
+    <string name="guardar">Guardar</string>
+    <string name="control_glucemico">Control Glucemico</string>
+    <string name="ingresa_control_gluc_mico">Ingresa control glucémico</string>
+    <string name="manejo_de_pie_diab_tico">Manejo de Pie Diabético</string>
+    <string name="ingresa_manejo_de_pie_diab_tico">Ingresa manejo de pie diabético</string>
+    <string name="ingresa_control_de_comorbilidades">Ingresa control de comorbilidades</string>
+    <string name="guardad_historial">Guardad Historial</string>
 
 </resources>

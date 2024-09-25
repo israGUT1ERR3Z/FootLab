@@ -3,8 +3,12 @@ package com.example.footlab
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -15,8 +19,6 @@ class HistorialClinicoFragment : Fragment() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editTextNombres: EditText
-    private lateinit var editTextApellidos: EditText
-    private lateinit var editTextEdad: EditText
     private lateinit var editTextTalla: EditText
     private lateinit var editTextPeso: EditText
     private lateinit var editTextIMC: EditText
@@ -29,7 +31,6 @@ class HistorialClinicoFragment : Fragment() {
     private lateinit var editTextSedentarismo: EditText
     private lateinit var editTextHabitosAlimenticios: EditText
     private lateinit var editTextTipoDiabetes: EditText
-    private lateinit var editTextHipertensionArterial: EditText
     private lateinit var editTextDislipidemia: EditText
     private lateinit var editTextObesidad: EditText
     private lateinit var editTextControlGlicemico: EditText
@@ -48,9 +49,6 @@ class HistorialClinicoFragment : Fragment() {
 
         // Inicialización de los EditTexts
         editTextNombres = view.findViewById(R.id.editTextNombres)
-        editTextApellidos = view.findViewById(R.id.editTextApellidos)
-        editTextEdad = view.findViewById(R.id.editTextEdad)
-        editTextTalla = view.findViewById(R.id.editTextTalla)
         editTextPeso = view.findViewById(R.id.editTextPeso)
         editTextIMC = view.findViewById(R.id.editTextIMC)
         editTextTemperatura = view.findViewById(R.id.editTextTemperatura)
@@ -62,10 +60,9 @@ class HistorialClinicoFragment : Fragment() {
         editTextSedentarismo = view.findViewById(R.id.editTextSedentarismo)
         editTextHabitosAlimenticios = view.findViewById(R.id.editTextHabitosAlimenticios)
         editTextTipoDiabetes = view.findViewById(R.id.editTextTipoDiabetes)
-        editTextHipertensionArterial = view.findViewById(R.id.editTextHipertensionArterial)
         editTextDislipidemia = view.findViewById(R.id.editTextDislipidemia)
         editTextObesidad = view.findViewById(R.id.editTextObesidad)
-        editTextControlGlicemico = view.findViewById(R.id.editTextControlGlicemico)
+        editTextControlGlicemico = view.findViewById(R.id.editTextControlGlucemico)
         editTextManejoPieDiabetico = view.findViewById(R.id.editTextManejoPieDiabetico)
         editTextControlComorbilidades = view.findViewById(R.id.editTextControlComorbilidades)
         buttonGuardar = view.findViewById(R.id.buttonGuardar)
@@ -109,9 +106,9 @@ class HistorialClinicoFragment : Fragment() {
 
                     // Validar si alguno de los campos no existe o está vacío
                     val camposRequeridos = listOf(
-                        "Edad", "Talla", "Peso", "IMC", "Temperatura", "FrecuenciaRespiratoria",
+                        "Talla", "Peso", "IMC", "Temperatura", "FrecuenciaRespiratoria",
                         "FrecuenciaCardiaca", "TensionArterial", "Tabaquismo", "Alcoholismo",
-                        "Sedentarismo", "HabitosAlimenticios", "TipoDiabetes", "HipertensionArterial",
+                        "Sedentarismo", "HabitosAlimenticios", "TipoDiabetes",
                         "Dislipidemia", "Obesidad", "ControlGlicemico", "ManejoPieDiabetico", "ControlComorbilidades"
                     )
 
@@ -146,8 +143,6 @@ class HistorialClinicoFragment : Fragment() {
 
                     // Recuperar los datos del documento y asignarlos a los EditText
                     editTextNombres.setText(datos["Nombres"] as? String ?: "")
-                    editTextApellidos.setText(datos["Apellidos"] as? String ?: "")
-                    editTextEdad.setText(datos["Edad"] as? String ?: "")
                     editTextTalla.setText(datos["Talla"] as? String ?: "")
                     editTextPeso.setText(datos["Peso"] as? String ?: "")
                     editTextIMC.setText(datos["IMC"] as? String ?: "")
@@ -160,7 +155,6 @@ class HistorialClinicoFragment : Fragment() {
                     editTextSedentarismo.setText(datos["Sedentarismo"] as? String ?: "")
                     editTextHabitosAlimenticios.setText(datos["HabitosAlimenticios"] as? String ?: "")
                     editTextTipoDiabetes.setText(datos["TipoDiabetes"] as? String ?: "")
-                    editTextHipertensionArterial.setText(datos["HipertensionArterial"] as? String ?: "")
                     editTextDislipidemia.setText(datos["Dislipidemia"] as? String ?: "")
                     editTextObesidad.setText(datos["Obesidad"] as? String ?: "")
                     editTextControlGlicemico.setText(datos["ControlGlicemico"] as? String ?: "")
@@ -214,8 +208,6 @@ class HistorialClinicoFragment : Fragment() {
                         val newDocRef = firestore.collection("Pacientes").document()
                         val datos = hashMapOf(
                             "Nombres" to editTextNombres.text.toString(),
-                            "Apellidos" to editTextApellidos.text.toString(),
-                            "Edad" to editTextEdad.text.toString(),
                             "Talla" to editTextTalla.text.toString(),
                             "Peso" to editTextPeso.text.toString(),
                             "IMC" to editTextIMC.text.toString(),
@@ -228,7 +220,6 @@ class HistorialClinicoFragment : Fragment() {
                             "Sedentarismo" to editTextSedentarismo.text.toString(),
                             "HabitosAlimenticios" to editTextHabitosAlimenticios.text.toString(),
                             "TipoDiabetes" to editTextTipoDiabetes.text.toString(),
-                            "HipertensionArterial" to editTextHipertensionArterial.text.toString(),
                             "Dislipidemia" to editTextDislipidemia.text.toString(),
                             "Obesidad" to editTextObesidad.text.toString(),
                             "ControlGlicemico" to editTextControlGlicemico.text.toString(),
@@ -257,8 +248,6 @@ class HistorialClinicoFragment : Fragment() {
                         val datos = HashMap<String, Any>()
 
                         datos["Nombres"] = editTextNombres.text.toString()
-                        datos["Apellidos"] = editTextApellidos.text.toString()
-                        datos["Edad"] = editTextEdad.text.toString()
                         datos["Talla"] = editTextTalla.text.toString()
                         datos["Peso"] = editTextPeso.text.toString()
                         datos["IMC"] = editTextIMC.text.toString()
@@ -271,7 +260,6 @@ class HistorialClinicoFragment : Fragment() {
                         datos["Sedentarismo"] = editTextSedentarismo.text.toString()
                         datos["HabitosAlimenticios"] = editTextHabitosAlimenticios.text.toString()
                         datos["TipoDiabetes"] = editTextTipoDiabetes.text.toString()
-                        datos["HipertensionArterial"] = editTextHipertensionArterial.text.toString()
                         datos["Dislipidemia"] = editTextDislipidemia.text.toString()
                         datos["Obesidad"] = editTextObesidad.text.toString()
                         datos["ControlGlicemico"] = editTextControlGlicemico.text.toString()
@@ -313,8 +301,6 @@ class HistorialClinicoFragment : Fragment() {
     private fun habilitarCampos() {
         // Habilitar campos para permitir entrada de datos
         editTextNombres.isEnabled = true
-        editTextApellidos.isEnabled = true
-        editTextEdad.isEnabled = true
         editTextTalla.isEnabled = true
         editTextPeso.isEnabled = true
         editTextIMC.isEnabled = true
@@ -327,7 +313,6 @@ class HistorialClinicoFragment : Fragment() {
         editTextSedentarismo.isEnabled = true
         editTextHabitosAlimenticios.isEnabled = true
         editTextTipoDiabetes.isEnabled = true
-        editTextHipertensionArterial.isEnabled = true
         editTextDislipidemia.isEnabled = true
         editTextObesidad.isEnabled = true
         editTextControlGlicemico.isEnabled = true
@@ -337,8 +322,6 @@ class HistorialClinicoFragment : Fragment() {
 
     private fun deshabilitarCampos() {
         editTextNombres.isEnabled = false
-        editTextApellidos.isEnabled = false
-        editTextEdad.isEnabled = false
         editTextTalla.isEnabled = false
         editTextPeso.isEnabled = false
         editTextIMC.isEnabled = false
@@ -351,7 +334,6 @@ class HistorialClinicoFragment : Fragment() {
         editTextSedentarismo.isEnabled = false
         editTextHabitosAlimenticios.isEnabled = false
         editTextTipoDiabetes.isEnabled = false
-        editTextHipertensionArterial.isEnabled = false
         editTextDislipidemia.isEnabled = false
         editTextObesidad.isEnabled = false
         editTextControlGlicemico.isEnabled = false
